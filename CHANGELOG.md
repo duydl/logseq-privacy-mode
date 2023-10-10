@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.2...v1.0.3) (2023-10-10)
+
+
+### Bug Fixes
+
+* button toggleable ([4db8068](https://github.com/duydl/logseq-privacy-mode/commit/4db806860927d1356d7b76b9c87c0a917f0e07b8))
+
 ## [1.0.2](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.1...v1.0.2) (2023-10-10)
 
 
