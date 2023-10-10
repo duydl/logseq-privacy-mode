@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/duydl/logseq-privacy-mode/compare/v1.1.2...v1.1.3) (2023-10-10)
+
+
+### Bug Fixes
+
+* Add private block encrypt remove content ([f0c3ef3](https://github.com/duydl/logseq-privacy-mode/commit/f0c3ef3f1f4914a359949db27bf2237ecd843fc3))
+
 ## [1.1.2](https://github.com/duydl/logseq-privacy-mode/compare/v1.1.1...v1.1.2) (2023-10-10)
 
 
