@@ -63,7 +63,7 @@ const settings = [
         {
           key: "secret_passphrase",
           title: "Passphrase used in encryption.",
-          description: "Warning: Always decrypt all blocks before changing password. Currently having no effect.",
+          description: "Warning: Always decrypt all blocks before changing password.",
           type: "string",
           default: ""
         },
@@ -383,9 +383,9 @@ async function encrypt (blockUuid){
 
       if (content) {
 
-        const password = logseq.settings?.unlock_password
-        // if (!password) {
-        if (true) {
+        const password = logseq.settings?.secret_passphrase
+        if (!password) {
+        // if (true) {
           logseq.Editor.updateBlock(childElement.uuid, btoa(content))
         }
         else {
@@ -417,9 +417,9 @@ async function decrypt (blockUuid){
 
       if (content) {
 
-        const password = logseq.settings?.unlock_password
-        // if (!password) {
-        if (true) {
+        const password = logseq.settings?.secret_passphrase
+        if (!password) {
+        // if (true) {
           logseq.Editor.updateBlock(childElement.uuid, atob(content))
         }
         else {
