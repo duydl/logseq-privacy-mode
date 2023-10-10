@@ -24,13 +24,13 @@ const settings = [
         type: "string",
         default: "_encrypted"
       },
-      // {
-      //   key: "encrypt_tag",
-      //   title: "Password for encryption.",
-      //   description: "Warning: Changing password would break your content when decrypt. ",
-      //   type: "string",
-      //   default: ""
-      // },
+      {
+        key: "encrypt_password",
+        title: "Password for encryption.",
+        description: "Warning: Always decrypt all blocks before changing password. ",
+        type: "string",
+        default: ""
+      },
   {
     key: "hide_options",
     title: "Options for hidden blocks",
@@ -154,7 +154,7 @@ const main = () => {
           data-id-toadd="${logseq.settings?.idToadd}"
           data-slot-id="${slot}"
           data-block-uuid="${payload.uuid}"
-          ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></a>`,
+          ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18 20V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h9V6a3 3 0 0 0-3-3a3 3 0 0 0-3 3H7a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2h1m-6 9a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2Z"/></svg></a>`,
         })}
         else if (state == "decrypt") {
           return logseq.provideUI({
@@ -165,7 +165,7 @@ const main = () => {
             data-id-toadd="${logseq.settings?.idToadd}"
             data-slot-id="${slot}"
             data-block-uuid="${payload.uuid}"
-            ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M18 20V10H6v10h12m0-12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h9V6a3 3 0 0 0-3-3a3 3 0 0 0-3 3H7a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2h1m-6 9a2 2 0 0 1-2-2a2 2 0 0 1 2-2a2 2 0 0 1 2 2a2 2 0 0 1-2 2Z"/></svg></a>`,
+            ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></a>`,
           })
         }
     }
@@ -276,7 +276,7 @@ const main = () => {
           data-hide-tag="${logseq.settings?.hide_tag}"
           data-slot-id="${slot}"
           data-block-uuid="${payload.uuid}"
-          ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.073 12.194L4.212 8.333c-1.52 1.657-2.096 3.317-2.106 3.351L2 12l.105.316C2.127 12.383 4.421 19 12.054 19c.929 0 1.775-.102 2.552-.273l-2.746-2.746a3.987 3.987 0 0 1-3.787-3.787zM12.054 5c-1.855 0-3.375.404-4.642.998L3.707 2.293L2.293 3.707l18 18l1.414-1.414l-3.298-3.298c2.638-1.953 3.579-4.637 3.593-4.679l.105-.316l-.105-.316C21.98 11.617 19.687 5 12.054 5zm1.906 7.546c.187-.677.028-1.439-.492-1.96s-1.283-.679-1.96-.492L10 8.586A3.955 3.955 0 0 1 12.054 8c2.206 0 4 1.794 4 4a3.94 3.94 0 0 1-.587 2.053l-1.507-1.507z"/></svg></a>`,
+          ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5Z"/></svg></a>`,
         })}
         else if (state == "show"){
           return logseq.provideUI({
@@ -287,7 +287,7 @@ const main = () => {
             data-hide-tag="${logseq.settings?.hide_tag}"
             data-slot-id="${slot}"
             data-block-uuid="${payload.uuid}"
-            ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5Z"/></svg></a>`,
+            ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.073 12.194L4.212 8.333c-1.52 1.657-2.096 3.317-2.106 3.351L2 12l.105.316C2.127 12.383 4.421 19 12.054 19c.929 0 1.775-.102 2.552-.273l-2.746-2.746a3.987 3.987 0 0 1-3.787-3.787zM12.054 5c-1.855 0-3.375.404-4.642.998L3.707 2.293L2.293 3.707l18 18l1.414-1.414l-3.298-3.298c2.638-1.953 3.579-4.637 3.593-4.679l.105-.316l-.105-.316C21.98 11.617 19.687 5 12.054 5zm1.906 7.546c.187-.677.028-1.439-.492-1.96s-1.283-.679-1.96-.492L10 8.586A3.955 3.955 0 0 1 12.054 8c2.206 0 4 1.794 4 4a3.94 3.94 0 0 1-.587 2.053l-1.507-1.507z"/></svg></a>`,
           })
         }
     }
@@ -346,9 +346,14 @@ async function encrypt (blockUuid){
       let [properties, content] = procContent(childElement.content)
 
       if (content) {
-        // logseq.Editor.updateBlock(childElement.uuid, CryptoJS.AES.encrypt(content, "password").toString())
 
-        logseq.Editor.updateBlock(childElement.uuid, btoa(content))
+        const password = logseq.settings?.encrypt_password
+        if (!password) {
+          logseq.Editor.updateBlock(childElement.uuid, btoa(content))
+        }
+        else {
+          logseq.Editor.updateBlock(childElement.uuid, CryptoJS.AES.encrypt(content, password).toString())
+        }
 
         Object.entries(properties).forEach(([key, value]) => {
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
@@ -374,9 +379,14 @@ async function decrypt (blockUuid){
       let [properties, content] = procContent(childElement.content)
 
       if (content) {
-        // logseq.Editor.updateBlock(childElement.uuid, CryptoJS.AES.decrypt(content, "password").toString(CryptoJS.enc.Utf8))
 
-        logseq.Editor.updateBlock(childElement.uuid, atob(content))
+        const password = logseq.settings?.encrypt_password
+        if (!password) {
+          logseq.Editor.updateBlock(childElement.uuid, atob(content))
+        }
+        else {
+           logseq.Editor.updateBlock(childElement.uuid, CryptoJS.AES.decrypt(content, password).toString(CryptoJS.enc.Utf8))
+        }
 
         Object.entries(properties).forEach(([key, value]) => {
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)

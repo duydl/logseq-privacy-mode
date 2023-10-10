@@ -28,7 +28,5 @@ Instead of using global toggles, you could quickly add a block with button to en
 ## Future Enhancement
 
 - Support for hiding parent block.
-- Encrypt/Decrypt with password.
-
 
 ## License
