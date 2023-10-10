@@ -79,7 +79,7 @@ const main = () => {
   logseq.provideModel({
     get_settings(e) {
       logseq.showSettingsUI()
-      // if (logseq.settings.encrypt) {
+      // if (logseq.settings?.encrypt) {
       //   logseq.updateSettings({"encrypt": false,})
       //   logseq.UI.showMsg("Encrypt False")
       // }
@@ -99,10 +99,10 @@ const main = () => {
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M11.991 0a.883.883 0 0 0-.871.817v3.02a.883.883 0 0 0 .88.884a.883.883 0 0 0 .88-.88V.816A.883.883 0 0 0 11.991 0zm7.705 3.109a.88.88 0 0 0-.521.174L16.8 5.231a.88.88 0 0 0 .559 1.563a.88.88 0 0 0 .56-.2l2.37-1.951a.88.88 0 0 0-.594-1.534zM4.32 3.122a.883.883 0 0 0-.611 1.52l2.37 1.951a.876.876 0 0 0 .56.2v-.002a.88.88 0 0 0 .56-1.56L4.828 3.283a.883.883 0 0 0-.508-.16zm7.66 3.228a5.046 5.046 0 0 0-5.026 5.045v1.488H5.787a.967.967 0 0 0-.965.964v9.189a.967.967 0 0 0 .965.964h12.426a.967.967 0 0 0 .964-.964v-9.19a.967.967 0 0 0-.964-.963h-1.168v-1.488A5.046 5.046 0 0 0 11.98 6.35zm.012 2.893a2.152 2.152 0 0 1 2.16 2.152v1.488H9.847v-1.488a2.152 2.152 0 0 1 2.145-2.152zm7.382.503a.883.883 0 1 0 .07 1.763h3.027a.883.883 0 0 0 0-1.76h-3.027a.883.883 0 0 0-.07-.003zM1.529 9.75a.883.883 0 0 0 0 1.76h2.999a.883.883 0 0 0 0-1.76zm10.46 6.774a1.28 1.28 0 0 1 .64 2.393v1.245a.63.63 0 0 1-1.259 0v-1.245a1.28 1.28 0 0 1 .619-2.393z"/></svg>
         </a>`
   });
-
+  
   logseq.provideModel({
     async mass_encrypt_decrypt(e) {
-      if (logseq.settings.toggle_encrypt_decrypt == "Encrypt") {
+      if (logseq.settings?.toggle_encrypt_decrypt == "Encrypt") {
         const query = ` [:find (pull ?h [*])
         :in $ 
         :where
@@ -115,7 +115,7 @@ const main = () => {
           console.log(result[item])
           encrypt(result[item][0].uuid)
         }
-      } else if (logseq.settings.toggle_encrypt_decrypt == "Decrypt") {
+      } else if (logseq.settings?.toggle_encrypt_decrypt == "Decrypt") {
         const query = ` [:find (pull ?h [*])
         :in $ 
         :where
@@ -136,15 +136,15 @@ const main = () => {
     "Add Private Block: Encrypt",
     async () => {
       const { content, uuid } = await logseq.Editor.getCurrentBlock()
-      logseq.Editor.updateBlock(uuid, `{{renderer privacymode_encrypt, default}} #${logseq.settings.encrypt_tag} `)
+      logseq.Editor.updateBlock(uuid, `{{renderer privacymode, encrypt}} #${logseq.settings?.encrypt_tag} `)
     },
   )
 
 
   logseq.App.onMacroRendererSlotted(({ slot, payload }) => {
-    const [type, scheme] = payload.arguments
-    if (type == "privacymode_encrypt") {
-      if (logseq.settings.toggle_encrypt_decrypt == "Encrypt") {
+    const [type, state] = payload.arguments
+    if (type == "privacymode") {
+      if (state == "encrypt") {
       
         return logseq.provideUI({
           key: type + payload.uuid,
@@ -156,7 +156,7 @@ const main = () => {
           data-block-uuid="${payload.uuid}"
           ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17a2 2 0 0 0 2-2a2 2 0 0 0-2-2a2 2 0 0 0-2 2a2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5a5 5 0 0 1 5 5v2h1m-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3Z"/></svg></a>`,
         })}
-        else if (logseq.settings.toggle_encrypt_decrypt == "Decrypt") {
+        else if (state == "decrypt") {
           return logseq.provideUI({
             key: type + payload.uuid,
             slot, 
@@ -173,14 +173,32 @@ const main = () => {
 
   logseq.provideModel({
     async encrypt_private_block(e) {
-      encrypt(e.dataset.blockUuid)  
+
+      const blockUuid  = e.dataset.blockUuid;
+      const block = await logseq.Editor.getBlock(blockUuid);
+
+      const flag = `{{renderer privacymode, encrypt}}`
+      const newContent = block?.content?.replace(`${flag}`,
+        `{{renderer privacymode, decrypt}}`);
+      logseq.Editor.updateBlock(blockUuid, newContent? newContent : "")
+
+      encrypt(blockUuid)  
     },
   });
 
 
   logseq.provideModel({
     async decrypt_private_block(e) {
-      decrypt(e.dataset.blockUuid)
+
+      const blockUuid  = e.dataset.blockUuid;
+      const block = await logseq.Editor.getBlock(blockUuid);
+
+      const flag = `{{renderer privacymode, decrypt}}`
+      const newContent = block?.content?.replace(`${flag}`,
+        `{{renderer privacymode, encrypt}}`);
+      logseq.Editor.updateBlock(blockUuid, newContent? newContent : "")
+
+      decrypt(blockUuid)
     },
   });
 
@@ -190,10 +208,10 @@ const main = () => {
 
   logseq.provideStyle({
     style: `
-    .${logseq.settings.hide_tag} {${logseq.settings.hidden_style}};
+    .${logseq.settings?.hide_tag} {${logseq.settings?.hidden_style}};
     `
   })
-  console.log(`.${logseq.settings.hide_tag} {${logseq.settings.hidden_style}};`)
+  console.log(`.${logseq.settings?.hide_tag} {${logseq.settings?.hidden_style}};`)
 
   logseq.App.registerUIItem("toolbar", {
       key: "privacy-mode-hideshow",
@@ -205,7 +223,7 @@ const main = () => {
 
   logseq.provideModel({
     async hide_show_all(e) {
-    if (logseq.settings.toggle_hide_show == "Hide") {
+    if (logseq.settings?.toggle_hide_show == "Hide") {
       const query = ` [:find (pull ?h [*])
       :in $ 
       :where
@@ -220,7 +238,7 @@ const main = () => {
 
       }
     }
-     else if (logseq.settings.toggle_hide_show == "Show") {
+     else if (logseq.settings?.toggle_hide_show == "Show") {
       const query = ` [:find (pull ?h [*])
       :in $ 
       :where
@@ -241,14 +259,14 @@ const main = () => {
     "Add Private Block: Hide",
     async () => {
       const { content, uuid } = await logseq.Editor.getCurrentBlock()
-      logseq.Editor.updateBlock(uuid, `<div class="${logseq.settings?.hide_tag}">${content}</div> {{renderer privacymode_hide, default}}  #${logseq.settings?.hide_tag}`)
+      logseq.Editor.updateBlock(uuid, `<div class="${logseq.settings?.hide_tag}">${content}</div> {{renderer privacymode, hide}}  #${logseq.settings?.hide_tag}`)
     },
   )
 
   logseq.App.onMacroRendererSlotted(({ slot, payload }) => {
-    const [type, scheme] = payload.arguments
-    if (type == "privacymode_hide") {
-      if (logseq.settings.toggle_hide_show == "Hide") {
+    const [type, state] = payload.arguments
+    if (type == "privacymode") {
+      if (state == "hide") {
       
         return logseq.provideUI({
           key: type + payload.uuid,
@@ -260,7 +278,7 @@ const main = () => {
           data-block-uuid="${payload.uuid}"
           ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8.073 12.194L4.212 8.333c-1.52 1.657-2.096 3.317-2.106 3.351L2 12l.105.316C2.127 12.383 4.421 19 12.054 19c.929 0 1.775-.102 2.552-.273l-2.746-2.746a3.987 3.987 0 0 1-3.787-3.787zM12.054 5c-1.855 0-3.375.404-4.642.998L3.707 2.293L2.293 3.707l18 18l1.414-1.414l-3.298-3.298c2.638-1.953 3.579-4.637 3.593-4.679l.105-.316l-.105-.316C21.98 11.617 19.687 5 12.054 5zm1.906 7.546c.187-.677.028-1.439-.492-1.96s-1.283-.679-1.96-.492L10 8.586A3.955 3.955 0 0 1 12.054 8c2.206 0 4 1.794 4 4a3.94 3.94 0 0 1-.587 2.053l-1.507-1.507z"/></svg></a>`,
         })}
-        else if (logseq.settings.toggle_hide_show == "Show"){
+        else if (state == "show"){
           return logseq.provideUI({
             key: type + payload.uuid,
             slot, 
@@ -277,14 +295,34 @@ const main = () => {
 
   logseq.provideModel({
     async hide_private_block(e) {
-      hide(e.dataset.blockUuid)  
+
+      const blockUuid  = e.dataset.blockUuid;
+      const block = await logseq.Editor.getBlock(blockUuid);
+
+      const flag = `{{renderer privacymode, hide}}`
+      const newContent = block?.content?.replace(`${flag}`,
+        `{{renderer privacymode, show}}`);
+      console.log(newContent)
+      await logseq.Editor.updateBlock(blockUuid, newContent? newContent : "")
+
+      hide(blockUuid)  
     },
   });
 
 
   logseq.provideModel({
     async show_private_block(e) {
-      show(e.dataset.blockUuid)
+
+      const blockUuid  = e.dataset.blockUuid;
+      const block = await logseq.Editor.getBlock(blockUuid);
+
+      const flag = `{{renderer privacymode, show}}`
+      const newContent = block?.content?.replace(`${flag}`,
+        `{{renderer privacymode, hide}}`);
+      console.log(newContent)
+      await logseq.Editor.updateBlock(blockUuid, newContent? newContent : "")
+          
+      show(blockUuid)
     },
   });
 
@@ -316,7 +354,8 @@ async function encrypt (blockUuid){
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
         });
 
-        logseq.Editor.upsertBlockProperty((childElement.uuid), "encrypted", true)}
+        }
+      logseq.Editor.upsertBlockProperty((childElement.uuid), "encrypted", true)
       }
     encrypt(childElement.uuid)
   };
@@ -342,8 +381,9 @@ async function decrypt (blockUuid){
         Object.entries(properties).forEach(([key, value]) => {
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
         });
-
-        logseq.Editor.upsertBlockProperty((childElement.uuid), "encrypted", false)}
+      }
+      
+      logseq.Editor.upsertBlockProperty((childElement.uuid), "encrypted", false)
       }
     decrypt(childElement.uuid)
   };
@@ -368,7 +408,8 @@ async function hide (blockUuid){
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
         });
 
-        logseq.Editor.upsertBlockProperty((childElement.uuid), "hidden", true)}
+       }
+       logseq.Editor.upsertBlockProperty((childElement.uuid), "hidden", true)
       }
     hide(childElement.uuid)
   };
@@ -390,13 +431,14 @@ async function show (blockUuid){
         const htmlString = content
         const doc = parser.parseFromString(htmlString, "text/html");
         const divElement = doc.querySelector("div");
-        logseq.Editor.updateBlock(childElement.uuid, divElement.textContent)
+        logseq.Editor.updateBlock(childElement.uuid, divElement?.textContent)
 
         Object.entries(properties).forEach(([key, value]) => {
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
         });
 
-        logseq.Editor.upsertBlockProperty((childElement.uuid), "hidden", false)}
+        }
+        logseq.Editor.upsertBlockProperty((childElement.uuid), "hidden", false)
       }
     show(childElement.uuid)
   };
