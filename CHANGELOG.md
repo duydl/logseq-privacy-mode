@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.0...v1.0.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* localized workflow ([4b57f4c](https://github.com/duydl/logseq-privacy-mode/commit/4b57f4c67947f16de114f0ab1eff6b651d6abfd6))
+
 # 1.0.0 (2023-10-10)
 
 
