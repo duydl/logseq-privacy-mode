@@ -82,14 +82,6 @@ const main = () => {
   logseq.provideModel({
     get_settings(e) {
       logseq.showSettingsUI()
-      // if (logseq.settings?.encrypt) {
-      //   logseq.updateSettings({"encrypt": false,})
-      //   logseq.UI.showMsg("Encrypt False")
-      // }
-      // else {
-      //   logseq.updateSettings({"encrypt": true,})
-      //   logseq.UI.showMsg("Encrypt True")
-      // }
     }
   });
 
@@ -106,6 +98,7 @@ const main = () => {
   logseq.provideModel({
     async mass_encrypt_decrypt(e) {
       if (logseq.settings?.toggle_encrypt_decrypt == "Encrypt") {
+
         const query = ` [:find (pull ?h [*])
         :in $ 
         :where
@@ -119,6 +112,18 @@ const main = () => {
           encrypt(result[item][0].uuid)
         }
       } else if (logseq.settings?.toggle_encrypt_decrypt == "Decrypt") {
+
+        logseq.showMainUI()
+
+        await waitForSubmitClick(); 
+        
+        const enteredPassword = passwordInput.value;
+        passwordInput.value = "";
+        
+        logseq.hideMainUI()
+
+        if (enteredPassword != logseq.settings?.encrypt_password) {return}
+        
         const query = ` [:find (pull ?h [*])
         :in $ 
         :where
@@ -177,6 +182,7 @@ const main = () => {
   logseq.provideModel({
     async encrypt_private_block(e) {
 
+      
       const blockUuid  = e.dataset.blockUuid;
       const block = await logseq.Editor.getBlock(blockUuid);
 
@@ -186,12 +192,23 @@ const main = () => {
       logseq.Editor.updateBlock(blockUuid, newContent? newContent : "")
 
       encrypt(blockUuid)  
+     
     },
   });
 
 
   logseq.provideModel({
     async decrypt_private_block(e) {
+      logseq.showMainUI()
+
+      await waitForSubmitClick(); 
+      
+      const enteredPassword = passwordInput.value;
+      passwordInput.value = "";
+      
+      logseq.hideMainUI()
+
+      if (enteredPassword != logseq.settings?.encrypt_password) {return}
 
       const blockUuid  = e.dataset.blockUuid;
       const block = await logseq.Editor.getBlock(blockUuid);
@@ -202,6 +219,7 @@ const main = () => {
       logseq.Editor.updateBlock(blockUuid, newContent? newContent : "")
 
       decrypt(blockUuid)
+      
     },
   });
 
@@ -332,9 +350,17 @@ const main = () => {
 }
 logseq.ready(main).catch(console.error)
 
+const passwordInput = document.getElementById("passwordInput");
 
+async function waitForSubmitClick() {
+  return new Promise((resolve) => {
+    const submitButton = document.getElementById("submitButton");
 
-
+    submitButton.addEventListener("click", () => {
+      resolve(); 
+    });
+  });
+}
 
 
 async function encrypt (blockUuid){
@@ -351,7 +377,8 @@ async function encrypt (blockUuid){
       if (content) {
 
         const password = logseq.settings?.encrypt_password
-        if (!password) {
+        // if (!password) {
+        if (true) {
           logseq.Editor.updateBlock(childElement.uuid, btoa(content))
         }
         else {
@@ -384,7 +411,8 @@ async function decrypt (blockUuid){
       if (content) {
 
         const password = logseq.settings?.encrypt_password
-        if (!password) {
+        // if (!password) {
+        if (true) {
           logseq.Editor.updateBlock(childElement.uuid, atob(content))
         }
         else {
