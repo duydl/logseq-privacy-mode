@@ -54,8 +54,8 @@ const settings = [
           default: "_encrypted"
         },
         {
-          key: "encrypt_password",
-          title: "Password for encryption.",
+          key: "unlock_password",
+          title: "Password for when decrypting text.",
           description: "Warning: Always decrypt all blocks before changing password. ",
           type: "string",
           default: ""
@@ -122,8 +122,8 @@ const main = () => {
         
         logseq.hideMainUI()
 
-        if (enteredPassword != logseq.settings?.encrypt_password) {return}
-        
+        if (enteredPassword != logseq.settings?.unlock_password) {return}
+
         const query = ` [:find (pull ?h [*])
         :in $ 
         :where
@@ -208,7 +208,7 @@ const main = () => {
       
       logseq.hideMainUI()
 
-      if (enteredPassword != logseq.settings?.encrypt_password) {return}
+      if (enteredPassword != logseq.settings?.unlock_password) {return}
 
       const blockUuid  = e.dataset.blockUuid;
       const block = await logseq.Editor.getBlock(blockUuid);
@@ -376,7 +376,7 @@ async function encrypt (blockUuid){
 
       if (content) {
 
-        const password = logseq.settings?.encrypt_password
+        const password = logseq.settings?.unlock_password
         // if (!password) {
         if (true) {
           logseq.Editor.updateBlock(childElement.uuid, btoa(content))
@@ -410,7 +410,7 @@ async function decrypt (blockUuid){
 
       if (content) {
 
-        const password = logseq.settings?.encrypt_password
+        const password = logseq.settings?.unlock_password
         // if (!password) {
         if (true) {
           logseq.Editor.updateBlock(childElement.uuid, atob(content))
