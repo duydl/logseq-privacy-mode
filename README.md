@@ -19,6 +19,12 @@ Encrypt/Decrypt blocks with custom tag.
 
 ![Alt text](screenshots/demo2.gif)
 
+### 3. Slash Commands
+
+Instead of using global toggles, you could quickly add a block with button to encrypt/decrypt or hide/show the content with the slash commands.
+
+![Alt text](screenshots/demo4.gif)
+
 ## Future Enhancement
 
 - Support for hiding parent block.
