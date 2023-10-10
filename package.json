@@ -1,0 +1,30 @@
+{
+  "name": "logseq-privacy-mode",
+  "version": "1.0.0",
+  "description": "Provide options to hide or encrypt all blocks with user-defined tags.",
+  "main": "dist/index.html",
+  "targets": {
+    "main": false
+  },
+  "scripts": {
+    "build": "parcel build src/index.html --public-url ./"
+  },
+  "author": "duydl",
+  "dependencies": {
+    "@logseq/libs": "^0.0.6",
+    "crypto-js": "^4.1.1"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^8.0.3",
+    "semantic-release": "19.0.2",
+    "parcel": "^2.5.0"
+  },
+  "logseq": {
+    "id": "logseq-privacy-mode",
+    "title": "privacyMode",
+    "icon": "./icon.png"
+  }
+}
