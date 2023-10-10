@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.1...v1.0.2) (2023-10-10)
+
+
+### Bug Fixes
+
+* div to control style instead of span ([61f7e6f](https://github.com/duydl/logseq-privacy-mode/commit/61f7e6f5161af34daeb8a946443b5c28fcbc9d57))
+
 ## [1.0.1](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.0...v1.0.1) (2023-10-10)
 
 
