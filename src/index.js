@@ -151,7 +151,7 @@ const main = () => {
     "Add Private Block: Encrypt",
     async () => {
       const { content, uuid } = await logseq.Editor.getCurrentBlock()
-      logseq.Editor.updateBlock(uuid, `#${content} {{renderer privacymode, encrypt}} #${logseq.settings?.encrypt_tag} `)
+      logseq.Editor.updateBlock(uuid, `${content} {{renderer privacymode, encrypt}} #${logseq.settings?.encrypt_tag} `)
     },
   )
 
