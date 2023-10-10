@@ -1,6 +1,6 @@
 {
   "name": "logseq-privacy-mode",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Provide options to hide or encrypt all blocks with user-defined tags.",
   "main": "dist/index.html",
   "targets": {

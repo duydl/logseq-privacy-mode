@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/duydl/logseq-privacy-mode/compare/v1.1.0...v1.1.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* change settings UI ([0628d6c](https://github.com/duydl/logseq-privacy-mode/commit/0628d6c4aa53f70a2e465059797a70a9aeba7596))
+
 # [1.1.0](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.3...v1.1.0) (2023-10-10)
 
 
