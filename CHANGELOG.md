@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/duydl/logseq-privacy-mode/compare/v1.1.3...v1.2.0) (2023-10-10)
+
+
+### Features
+
+* add password prompt ([ef4a0a6](https://github.com/duydl/logseq-privacy-mode/commit/ef4a0a60be7fb764b1a39d66e33eb8fb767ee26a))
+
 ## [1.1.3](https://github.com/duydl/logseq-privacy-mode/compare/v1.1.2...v1.1.3) (2023-10-10)
 
 
