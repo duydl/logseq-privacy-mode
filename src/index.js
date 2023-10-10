@@ -12,16 +12,17 @@ const settings = [
     default: null
   },
       {
-        key: "encrypt",
-        description: "Encrypt/Decrypt",
-        type: "boolean",
-        default: true
+        key: "toggle_encrypt_decrypt",
+        type: "enum",
+        enumPicker: "radio",
+        enumChoices: ["Encrypt", "Decrypt"],
+        default: "Encrypt",
       },
       {
         key: "encrypt_tag",
         title: "Tag for your encrypted block",
         type: "string",
-        default: ""
+        default: "_encrypted"
       },
       // {
       //   key: "encrypt_tag",
@@ -37,16 +38,18 @@ const settings = [
     default: null
   },
       {
-        key: "hide",
-        description: "Hide/Show",
-        type: "boolean",
-        default: true
+        key: "toggle_hide_show",
+        type: "enum",
+        enumPicker: "radio",
+        enumChoices: ["Hide", "Show"],
+        default: "Hide",
       },
       {
         key: "hide_tag",
         title: "Tag for your hidden block",
         type: "string",
-        default: ""
+        description: "Warning: hidden classname could not be used.",
+        default: "_hidden"
       },
       {
         key: "hidden_style",
@@ -63,18 +66,18 @@ const main = () => {
 
   logseq.useSettingsSchema(settings);
 
-  console.log('=== logseq-privacy-mode Plugin Loaded ===')
+  console.log("=== logseq-privacy-mode Plugin Loaded ===")
   
   logseq.App.registerUIItem("toolbar", {
-      key: "logseg-privacy-mode-settings",
+      key: "privacy-mode-settings",
       template:
-          `<a data-on-click="show_settings" class="button">
+          `<a data-on-click="get_settings" class="button">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M11.1 15h1.8q.225 0 .388-.188t.112-.412l-.475-2.625q.5-.25.788-.725T14 10q0-.825-.588-1.413T12 8q-.825 0-1.413.588T10 10q0 .575.288 1.05t.787.725L10.6 14.4q-.05.225.113.413T11.1 15Zm.9 6.9q-.175 0-.325-.025t-.3-.075Q8 20.675 6 17.637T4 11.1V6.375q0-.625.363-1.125t.937-.725l6-2.25q.35-.125.7-.125t.7.125l6 2.25q.575.225.938.725T20 6.375V11.1q0 3.5-2 6.538T12.625 21.8q-.15.05-.3.075T12 21.9Z"/></svg>
           </a>`
   });
 
   logseq.provideModel({
-    show_settings(e) {
+    get_settings(e) {
       logseq.showSettingsUI()
       // if (logseq.settings.encrypt) {
       //   logseq.updateSettings({"encrypt": false,})
@@ -90,33 +93,47 @@ const main = () => {
   // == Encrypt Block == //
 
   logseq.App.registerUIItem("toolbar", {
-    key: "logseg-mass-decrypt",
+    key: "mass-encrypt-decrypt",
     template:
-        `<a data-on-click="mass_decrypt" class="button">
+        `<a data-on-click="mass_encrypt_decrypt" class="button">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M11.991 0a.883.883 0 0 0-.871.817v3.02a.883.883 0 0 0 .88.884a.883.883 0 0 0 .88-.88V.816A.883.883 0 0 0 11.991 0zm7.705 3.109a.88.88 0 0 0-.521.174L16.8 5.231a.88.88 0 0 0 .559 1.563a.88.88 0 0 0 .56-.2l2.37-1.951a.88.88 0 0 0-.594-1.534zM4.32 3.122a.883.883 0 0 0-.611 1.52l2.37 1.951a.876.876 0 0 0 .56.2v-.002a.88.88 0 0 0 .56-1.56L4.828 3.283a.883.883 0 0 0-.508-.16zm7.66 3.228a5.046 5.046 0 0 0-5.026 5.045v1.488H5.787a.967.967 0 0 0-.965.964v9.189a.967.967 0 0 0 .965.964h12.426a.967.967 0 0 0 .964-.964v-9.19a.967.967 0 0 0-.964-.963h-1.168v-1.488A5.046 5.046 0 0 0 11.98 6.35zm.012 2.893a2.152 2.152 0 0 1 2.16 2.152v1.488H9.847v-1.488a2.152 2.152 0 0 1 2.145-2.152zm7.382.503a.883.883 0 1 0 .07 1.763h3.027a.883.883 0 0 0 0-1.76h-3.027a.883.883 0 0 0-.07-.003zM1.529 9.75a.883.883 0 0 0 0 1.76h2.999a.883.883 0 0 0 0-1.76zm10.46 6.774a1.28 1.28 0 0 1 .64 2.393v1.245a.63.63 0 0 1-1.259 0v-1.245a1.28 1.28 0 0 1 .619-2.393z"/></svg>
         </a>`
   });
 
   logseq.provideModel({
-    async mass_decrypt(e) {
-
-    const query = ` [:find (pull ?h [*])
-    :in $ 
-    :where
-    [?p :block/name "${logseq.settings?.encrypt_tag}"]
-    [?h :block/refs ?p]] `
-  
-    const result = await logseq.DB.datascriptQuery(query) 
-    console.log(result)
-    for (const item in result) {
-      console.log(result[item])
-      decrypt(result[item][0].uuid)
+    async mass_encrypt_decrypt(e) {
+      if (logseq.settings.toggle_encrypt_decrypt == "Encrypt") {
+        const query = ` [:find (pull ?h [*])
+        :in $ 
+        :where
+        [?p :block/name "${logseq.settings?.encrypt_tag}"]
+        [?h :block/refs ?p]] `
+      
+        const result = await logseq.DB.datascriptQuery(query) 
+        console.log(result)
+        for (const item in result) {
+          console.log(result[item])
+          encrypt(result[item][0].uuid)
+        }
+      } else if (logseq.settings.toggle_encrypt_decrypt == "Decrypt") {
+        const query = ` [:find (pull ?h [*])
+        :in $ 
+        :where
+        [?p :block/name "${logseq.settings?.encrypt_tag}"]
+        [?h :block/refs ?p]] `
+      
+        const result = await logseq.DB.datascriptQuery(query) 
+        console.log(result)
+        for (const item in result) {
+          console.log(result[item])
+          decrypt(result[item][0].uuid)
+      }
     }
   }});
 
 
   logseq.Editor.registerSlashCommand(
-    'Add Private Block: Encrypt',
+    "Add Private Block: Encrypt",
     async () => {
       const { content, uuid } = await logseq.Editor.getCurrentBlock()
       logseq.Editor.updateBlock(uuid, `{{renderer privacymode_encrypt, default}} #${logseq.settings.encrypt_tag} `)
@@ -173,42 +190,58 @@ const main = () => {
 
   logseq.provideStyle({
     style: `
-    #${logseq.settings.hide_tag}: {${logseq.settings.hidden_style};}
+    .${logseq.settings.hide_tag} {${logseq.settings.hidden_style}};
     `
   })
-  console.log(`#${logseq.settings.hide_tag}: {${logseq.settings.hidden_style}}`)
+  console.log(`.${logseq.settings.hide_tag} {${logseq.settings.hidden_style}};`)
 
   logseq.App.registerUIItem("toolbar", {
-      key: "logseg-show-all",
+      key: "hide-show-all",
       template:
-          `<a data-on-click="show_all" class="button">
+          `<a data-on-click="hide_show_all" class="button">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M20.8 17v-1.5c0-1.4-1.4-2.5-2.8-2.5s-2.8 1.1-2.8 2.5V17c-.6 0-1.2.6-1.2 1.2v3.5c0 .7.6 1.3 1.2 1.3h5.5c.7 0 1.3-.6 1.3-1.2v-3.5c0-.7-.6-1.3-1.2-1.3m-1.3 0h-3v-1.5c0-.8.7-1.3 1.5-1.3s1.5.5 1.5 1.3V17M15 12c-.9.7-1.5 1.6-1.7 2.7c-.4.2-.8.3-1.3.3c-1.7 0-3-1.3-3-3s1.3-3 3-3s3 1.3 3 3m-3 7.5c-5 0-9.3-3.1-11-7.5c1.7-4.4 6-7.5 11-7.5s9.3 3.1 11 7.5c-.2.5-.5 1-.7 1.5C21.5 12 19.8 11 18 11c-.4 0-.7.1-1.1.1C16.5 8.8 14.5 7 12 7c-2.8 0-5 2.2-5 5s2.2 5 5 5h.3c-.2.4-.3.8-.3 1.2v1.3Z"/></svg>
           </a>`
   });
 
   logseq.provideModel({
-    async show_all(e) {
+    async hide_show_all(e) {
+    if (logseq.settings.toggle_hide_show == "Hide") {
+      const query = ` [:find (pull ?h [*])
+      :in $ 
+      :where
+      [?p :block/name "${logseq.settings?.hide_tag}"]
+      [?h :block/refs ?p]] `
+    
+      const result = await logseq.DB.datascriptQuery(query) 
+      console.log(result)
+      for (const item in result) {
+        console.log(result[item])
+        hide(result[item][0].uuid)
 
-    const query = ` [:find (pull ?h [*])
-    :in $ 
-    :where
-    [?p :block/name "${logseq.settings?.hide_tag}"]
-    [?h :block/refs ?p]] `
-  
-    const result = await logseq.DB.datascriptQuery(query) 
-    console.log(result)
-    for (const item in result) {
-      console.log(result[item])
-      show(result[item][0].uuid)
+      }
     }
+     else if (logseq.settings.toggle_hide_show == "Show") {
+      const query = ` [:find (pull ?h [*])
+      :in $ 
+      :where
+      [?p :block/name "${logseq.settings?.hide_tag}"]
+      [?h :block/refs ?p]] `
+    
+      const result = await logseq.DB.datascriptQuery(query) 
+      console.log(result)
+      for (const item in result) {
+        console.log(result[item])
+        show(result[item][0].uuid)
+    }
+  }
   }});
 
 
   logseq.Editor.registerSlashCommand(
-    'Add Private Block: Hide',
+    "Add Private Block: Hide",
     async () => {
       const { content, uuid } = await logseq.Editor.getCurrentBlock()
-      logseq.Editor.updateBlock(uuid, `<div id="${logseq.settings?.hide_tag}">${content}</div> {{renderer privacymode_hide, default}}  #${logseq.settings?.hide_tag}`)
+      logseq.Editor.updateBlock(uuid, `<span class="${logseq.settings?.hide_tag}">${content}</span> {{renderer privacymode_hide, default}}  #${logseq.settings?.hide_tag}`)
     },
   )
 
@@ -244,7 +277,7 @@ const main = () => {
 
   logseq.provideModel({
     async hide_private_block(e) {
-      hide(e.dataset.blockUuid, e.dataset.hideTag)  
+      hide(e.dataset.blockUuid)  
     },
   });
 
@@ -304,7 +337,7 @@ async function decrypt (blockUuid){
       if (content) {
         // logseq.Editor.updateBlock(childElement.uuid, CryptoJS.AES.decrypt(content, "password").toString(CryptoJS.enc.Utf8))
 
-        logseq.Editor.updateBlock(childElement.uuid, atob(content, "password"))
+        logseq.Editor.updateBlock(childElement.uuid, atob(content))
 
         Object.entries(properties).forEach(([key, value]) => {
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
@@ -317,7 +350,7 @@ async function decrypt (blockUuid){
 }
 
 
-async function hide (blockUuid, divId){
+async function hide (blockUuid){
   const blocks = await logseq.Editor.getBlock(blockUuid, {
     includeChildren: true
   })
@@ -329,7 +362,7 @@ async function hide (blockUuid, divId){
       let [properties, content] = procContent(childElement.content)
 
       if (content) {
-        logseq.Editor.updateBlock(childElement.uuid, `<div id="${divId}">${content}</div>`)
+        logseq.Editor.updateBlock(childElement.uuid, `<span class="${logseq.settings?.hide_tag}">${content}</span>`)
 
         Object.entries(properties).forEach(([key, value]) => {
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
@@ -355,8 +388,8 @@ async function show (blockUuid){
 
       if (content) {
         const htmlString = content
-        const doc = parser.parseFromString(htmlString, 'text/html');
-        const divElement = doc.querySelector('div');
+        const doc = parser.parseFromString(htmlString, "text/html");
+        const divElement = doc.querySelector("span");
         logseq.Editor.updateBlock(childElement.uuid, divElement.textContent)
 
         Object.entries(properties).forEach(([key, value]) => {
@@ -371,21 +404,21 @@ async function show (blockUuid){
 
 
 function procContent(inputString) {
-  const lines = inputString.split('\n');
+  const lines = inputString.split("\n");
   const resultObject = {};
-  const filteredLines = lines.filter((line) => !line.includes('::'));
+  const filteredLines = lines.filter((line) => !line.includes("::"));
 
-  const filteredtagLines = lines.filter((line) => line.includes('::'));
+  const filteredtagLines = lines.filter((line) => line.includes("::"));
 
   // Join the filtered lines back into a single string
-  const resultString = filteredLines.join('\n');
+  const resultString = filteredLines.join("\n");
 
   if (filteredtagLines.length > 0){
     filteredtagLines.forEach((line) => {
-      // Split the line by '::'
-      let part = line.split('::')
+      // Split the line by "::"
+      let part = line.split("::")
       let property = part[0].trim();
-      let value = part.slice(1).join('::');
+      let value = part.slice(1).join("::");
       resultObject[property] = value;
     })
   } 
