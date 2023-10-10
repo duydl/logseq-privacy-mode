@@ -14,6 +14,7 @@ const settings = [
   },
       {
         key: "toggle_hide_show",
+        title: "Settings for global button privacy-mode-hideshow",
         type: "enum",
         enumPicker: "radio",
         enumChoices: ["Hide", "Show"],
@@ -40,6 +41,7 @@ const settings = [
     },
         {
           key: "toggle_encrypt_decrypt",
+          title: "Settings for global button privacy-mode-encdec",
           type: "enum",
           enumPicker: "radio",
           enumChoices: ["Encrypt", "Decrypt"],
