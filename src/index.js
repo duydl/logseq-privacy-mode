@@ -5,32 +5,7 @@ import CryptoJS from "crypto-js";
 const parser = new DOMParser();
 
 const settings = [
-  {
-    key: "encrypt_options",
-    title: "Options for encrypted blocks",
-    type: "heading",
-    default: null
-  },
-      {
-        key: "toggle_encrypt_decrypt",
-        type: "enum",
-        enumPicker: "radio",
-        enumChoices: ["Encrypt", "Decrypt"],
-        default: "Encrypt",
-      },
-      {
-        key: "encrypt_tag",
-        title: "Tag for your encrypted block",
-        type: "string",
-        default: "_encrypted"
-      },
-      {
-        key: "encrypt_password",
-        title: "Password for encryption.",
-        description: "Warning: Always decrypt all blocks before changing password. ",
-        type: "string",
-        default: ""
-      },
+
   {
     key: "hide_options",
     title: "Options for hidden blocks",
@@ -57,6 +32,32 @@ const settings = [
         type: "string",
         default: `background-color: black; color: black`
       },
+    {
+      key: "encrypt_options",
+      title: "Options for encrypted blocks",
+      type: "heading",
+      default: null
+    },
+        {
+          key: "toggle_encrypt_decrypt",
+          type: "enum",
+          enumPicker: "radio",
+          enumChoices: ["Encrypt", "Decrypt"],
+          default: "Encrypt",
+        },
+        {
+          key: "encrypt_tag",
+          title: "Tag for your encrypted block",
+          type: "string",
+          default: "_encrypted"
+        },
+        {
+          key: "encrypt_password",
+          title: "Password for encryption.",
+          description: "Warning: Always decrypt all blocks before changing password. ",
+          type: "string",
+          default: ""
+        },
   
 ];
 
