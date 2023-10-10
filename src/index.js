@@ -60,6 +60,13 @@ const settings = [
           type: "string",
           default: ""
         },
+        {
+          key: "secret_passphrase",
+          title: "Passphrase used in encryption.",
+          description: "Warning: Always decrypt all blocks before changing password. Currently having no effect.",
+          type: "string",
+          default: ""
+        },
   
 ];
 
