@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.1...v1.2.2) (2023-10-10)
+
+
+### Bug Fixes
+
+* trailing # when add private block encrypt ([924aa64](https://github.com/duydl/logseq-privacy-mode/commit/924aa642cb6acd2d0ecdc7309150a41af7e724d2))
+
 ## [1.2.1](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.0...v1.2.1) (2023-10-10)
 
 
