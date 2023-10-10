@@ -241,7 +241,7 @@ const main = () => {
     "Add Private Block: Hide",
     async () => {
       const { content, uuid } = await logseq.Editor.getCurrentBlock()
-      logseq.Editor.updateBlock(uuid, `<span class="${logseq.settings?.hide_tag}">${content}</span> {{renderer privacymode_hide, default}}  #${logseq.settings?.hide_tag}`)
+      logseq.Editor.updateBlock(uuid, `<div class="${logseq.settings?.hide_tag}">${content}</div> {{renderer privacymode_hide, default}}  #${logseq.settings?.hide_tag}`)
     },
   )
 
@@ -362,7 +362,7 @@ async function hide (blockUuid){
       let [properties, content] = procContent(childElement.content)
 
       if (content) {
-        logseq.Editor.updateBlock(childElement.uuid, `<span class="${logseq.settings?.hide_tag}">${content}</span>`)
+        logseq.Editor.updateBlock(childElement.uuid, `<div class="${logseq.settings?.hide_tag}">${content}</div>`)
 
         Object.entries(properties).forEach(([key, value]) => {
           logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
@@ -389,7 +389,7 @@ async function show (blockUuid){
       if (content) {
         const htmlString = content
         const doc = parser.parseFromString(htmlString, "text/html");
-        const divElement = doc.querySelector("span");
+        const divElement = doc.querySelector("div");
         logseq.Editor.updateBlock(childElement.uuid, divElement.textContent)
 
         Object.entries(properties).forEach(([key, value]) => {

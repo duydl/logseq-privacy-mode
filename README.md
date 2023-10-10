@@ -7,7 +7,7 @@ A little plugin that offers some privacy options for your Logseq notes. With thi
 ## Features
 ### 1. Hide Blocks
 
-Automatically wrap/unwrap children of blocks tagged with `<span>` element. Support for hiding parent block is planned later.
+Automatically wrap/unwrap children of blocks tagged with `<div>` element. Support for hiding parent block is planned later.
 
 ![Alt text](screenshots/demo1.gif)
 
