@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.3...v1.1.0) (2023-10-10)
+
+
+### Features
+
+* encrypt with password ([1e2f78b](https://github.com/duydl/logseq-privacy-mode/commit/1e2f78b6e68081e0d9caf26d719793f93f6f684e))
+
 ## [1.0.3](https://github.com/duydl/logseq-privacy-mode/compare/v1.0.2...v1.0.3) (2023-10-10)
 
 
