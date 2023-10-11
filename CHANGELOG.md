@@ -1,3 +1,10 @@
+## [1.2.3](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.2...v1.2.3) (2023-10-10)
+
+
+### Bug Fixes
+
+* return passphrase feature ([2a7e4ac](https://github.com/duydl/logseq-privacy-mode/commit/2a7e4ac6b48d06048f0394c8bae38c116dd1dcdd))
+
 ## [1.2.2](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.1...v1.2.2) (2023-10-10)
 
 
