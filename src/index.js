@@ -3,6 +3,7 @@ import "@logseq/libs";
 import CryptoJS from "crypto-js";
 
 const parser = new DOMParser();
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const settings = [
 
@@ -56,7 +57,7 @@ const settings = [
         {
           key: "unlock_password",
           title: "Password for when decrypting text.",
-          description: "Warning: Always decrypt all blocks before changing password. ",
+          description: " ",
           type: "string",
           default: ""
         },
@@ -189,7 +190,26 @@ const main = () => {
   logseq.provideModel({
     async encrypt_private_block(e) {
 
-      
+      // await logseq.Editor.exitEditingMode()
+      // await delay(500);
+      // await logseq.Editor.exitEditingMode()
+      // window.dispatchEvent(
+      //   new KeyboardEvent("keydown", {
+      //     altKey: false,
+      //     code: "Escape",
+      //     ctrlKey: false,
+      //     isComposing: false,
+      //     key: "Escape",
+      //     location: 0,
+      //     metaKey: false,
+      //     repeat: false,
+      //     shiftKey: false,
+      //     which: 27,
+      //     charCode: 0,
+      //     keyCode: 27,
+      //   })
+      // );
+
       const blockUuid  = e.dataset.blockUuid;
       const block = await logseq.Editor.getBlock(blockUuid);
 
@@ -357,6 +377,11 @@ const main = () => {
 }
 logseq.ready(main).catch(console.error)
 
+// document.addEventListener(
+//   "keydown",
+//   (e)=>{console.log("Check for keypress:", e)}
+// );
+
 const passwordInput = document.getElementById("passwordInput");
 
 async function waitForSubmitClick() {
@@ -375,31 +400,36 @@ async function encrypt (blockUuid){
     includeChildren: true
   })
   for (const childElement of blocks?.children) {
-    let encrypted = await logseq.Editor.getBlockProperty(childElement.uuid, "encrypted")
-
+    const childUuid = childElement.uuid
+    let encrypted = await logseq.Editor.getBlockProperty(childUuid, "encrypted")
+    
     if (!encrypted) {
 
       let [properties, content] = procContent(childElement.content)
 
-      if (content) {
+      const checkEditing = await logseq.Editor.checkEditing()
+
+      if (content && checkEditing!=childUuid) {
 
         const password = logseq.settings?.secret_passphrase
         if (!password) {
         // if (true) {
-          logseq.Editor.updateBlock(childElement.uuid, btoa(content))
+          logseq.Editor.updateBlock(childUuid, btoa(content))
         }
         else {
-          logseq.Editor.updateBlock(childElement.uuid, CryptoJS.AES.encrypt(content, password).toString())
+          logseq.Editor.updateBlock(childUuid, CryptoJS.AES.encrypt(content, password).toString())
         }
 
         Object.entries(properties).forEach(([key, value]) => {
-          logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
-        });
+          logseq.Editor.upsertBlockProperty((childUuid), key, value)
 
+          
+        });
+        logseq.Editor.upsertBlockProperty((childUuid), "encrypted", true)
         }
-      logseq.Editor.upsertBlockProperty((childElement.uuid), "encrypted", true)
+      
       }
-    encrypt(childElement.uuid)
+    encrypt(childUuid)
   };
 }
 
@@ -409,31 +439,35 @@ async function decrypt (blockUuid){
     includeChildren: true
   })
   for (const childElement of blocks?.children) {
-    let encrypted = await logseq.Editor.getBlockProperty(childElement.uuid, "encrypted")
+
+    const childUuid = childElement.uuid
+    let encrypted = await logseq.Editor.getBlockProperty(childUuid, "encrypted")
     
     if (encrypted && encrypted == true) {
 
       let [properties, content] = procContent(childElement.content)
+      const checkEditing = await logseq.Editor.checkEditing()
 
-      if (content) {
-
+      if (content && checkEditing!=childUuid) {
         const password = logseq.settings?.secret_passphrase
         if (!password) {
         // if (true) {
-          logseq.Editor.updateBlock(childElement.uuid, atob(content))
+          logseq.Editor.updateBlock(childUuid, atob(content))
         }
         else {
-           logseq.Editor.updateBlock(childElement.uuid, CryptoJS.AES.decrypt(content, password).toString(CryptoJS.enc.Utf8))
+           logseq.Editor.updateBlock(childUuid, CryptoJS.AES.decrypt(content, password).toString(CryptoJS.enc.Utf8))
         }
 
         Object.entries(properties).forEach(([key, value]) => {
-          logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
+          logseq.Editor.upsertBlockProperty((childUuid), key, value)
         });
+        
+        logseq.Editor.upsertBlockProperty((childUuid), "encrypted", false)
       }
       
-      logseq.Editor.upsertBlockProperty((childElement.uuid), "encrypted", false)
+      
       }
-    decrypt(childElement.uuid)
+    decrypt(childUuid)
   };
 }
 
@@ -443,23 +477,26 @@ async function hide (blockUuid){
     includeChildren: true
   })
   for (const childElement of blocks?.children) {
-    let hidden = await logseq.Editor.getBlockProperty(childElement.uuid, "hidden")
+    const childUuid = childElement.uuid
+    
+    let hidden = await logseq.Editor.getBlockProperty(childUuid, "hidden")
 
     if (!hidden) {
 
       let [properties, content] = procContent(childElement.content)
+      const checkEditing = await logseq.Editor.checkEditing()
 
-      if (content) {
-        logseq.Editor.updateBlock(childElement.uuid, `<div class="${logseq.settings?.hide_tag}">${content}</div>`)
+      if (content && checkEditing!=childUuid) {
+        logseq.Editor.updateBlock(childUuid, `<div class="${logseq.settings?.hide_tag}">${content}</div>`)
 
         Object.entries(properties).forEach(([key, value]) => {
-          logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
+          logseq.Editor.upsertBlockProperty((childUuid), key, value)
         });
-
+        logseq.Editor.upsertBlockProperty((childUuid), "hidden", true)
        }
-       logseq.Editor.upsertBlockProperty((childElement.uuid), "hidden", true)
+       
       }
-    hide(childElement.uuid)
+    hide(childUuid)
   };
 }
 
@@ -469,26 +506,29 @@ async function show (blockUuid){
     includeChildren: true
   })
   for (const childElement of blocks?.children) {
-    let hidden = await logseq.Editor.getBlockProperty(childElement.uuid, "hidden")
+    const childUuid = childElement.uuid
+
+    let hidden = await logseq.Editor.getBlockProperty(childUuid, "hidden")
 
     if (hidden && hidden == true) {
 
       let [properties, content] = procContent(childElement.content)
+      const checkEditing = await logseq.Editor.checkEditing()
 
-      if (content) {
+      if (content && checkEditing!=childUuid) {
         const htmlString = content
         const doc = parser.parseFromString(htmlString, "text/html");
         const divElement = doc.querySelector("div");
-        logseq.Editor.updateBlock(childElement.uuid, divElement?.textContent)
+        logseq.Editor.updateBlock(childUuid, divElement?.textContent)
 
         Object.entries(properties).forEach(([key, value]) => {
-          logseq.Editor.upsertBlockProperty((childElement.uuid), key, value)
+          logseq.Editor.upsertBlockProperty((childUuid), key, value)
         });
-
+        logseq.Editor.upsertBlockProperty((childUuid), "hidden", false)
         }
-        logseq.Editor.upsertBlockProperty((childElement.uuid), "hidden", false)
+        
       }
-    show(childElement.uuid)
+    show(childUuid)
   };
 }
 
