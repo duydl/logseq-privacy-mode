@@ -25,7 +25,7 @@ const settings = [
         key: "hide_tag",
         title: "Tag for your hidden block",
         type: "string",
-        description: "Warning: hidden classname could not be used.",
+        description: "Warning: Some default classname such as 'hidden' could not be used.",
         default: "_hidden"
       },
       {
@@ -64,7 +64,7 @@ const settings = [
         {
           key: "secret_passphrase",
           title: "Passphrase used in encryption.",
-          description: "Warning: Always decrypt all blocks before changing password.",
+          description: "If left empty. The text will be converted to base64 character. Else, it would use CryptoJS.AES to encrypt. Warning: Always decrypt all blocks before changing password.",
           type: "string",
           default: ""
         },
@@ -192,7 +192,7 @@ const main = () => {
 
       // await logseq.Editor.exitEditingMode()
       // await delay(500);
-      // await logseq.Editor.exitEditingMode()
+      // 
       // window.dispatchEvent(
       //   new KeyboardEvent("keydown", {
       //     altKey: false,
@@ -406,7 +406,7 @@ async function encrypt (blockUuid){
     if (!encrypted) {
 
       let [properties, content] = procContent(childElement.content)
-
+      // await logseq.Editor.exitEditingMode()
       const checkEditing = await logseq.Editor.checkEditing()
 
       if (content && checkEditing!=childUuid) {
