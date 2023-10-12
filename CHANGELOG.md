@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.3...v1.2.4) (2023-10-11)
+
+
+### Bug Fixes
+
+* prevent change block being edited ([ae954fd](https://github.com/duydl/logseq-privacy-mode/commit/ae954fd71f23c661db6d481ced6ec3628d02fd2a))
+
 ## [1.2.3](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.2...v1.2.3) (2023-10-10)
 
 
