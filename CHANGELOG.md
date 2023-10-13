@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.5...v1.2.6) (2023-10-13)
+
+
+### Bug Fixes
+
+* ci miss icon ([635b874](https://github.com/duydl/logseq-privacy-mode/commit/635b874e134e9ce57a244761b29a207f8f700f8e))
+
 ## [1.2.5](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.4...v1.2.5) (2023-10-12)
 
 
