@@ -121,12 +121,15 @@ const main = () => {
         }
       } else if (logseq.settings?.toggle_encrypt_decrypt == "Decrypt") {
 
+        document.getElementById("modal").classList.remove('modal-hidden');
         logseq.showMainUI()
 
         await waitForSubmitClick(); 
         
         const enteredPassword = passwordInput.value;
         passwordInput.value = "";
+
+        document.getElementById("modal").classList.add('modal-hidden');
         
         logseq.hideMainUI()
 
@@ -226,13 +229,15 @@ const main = () => {
 
   logseq.provideModel({
     async decrypt_private_block(e) {
+      document.getElementById("modal").classList.remove('modal-hidden');
       logseq.showMainUI()
 
       await waitForSubmitClick(); 
       
       const enteredPassword = passwordInput.value;
       passwordInput.value = "";
-      
+
+      document.getElementById("modal").classList.add('modal-hidden');
       logseq.hideMainUI()
 
       if (enteredPassword != logseq.settings?.unlock_password) {return}
@@ -382,17 +387,33 @@ logseq.ready(main).catch(console.error)
 //   (e)=>{console.log("Check for keypress:", e)}
 // );
 
-const passwordInput = document.getElementById("passwordInput");
+
+
 
 async function waitForSubmitClick() {
   return new Promise((resolve) => {
-    const submitButton = document.getElementById("submitButton");
+    const passwordInput = document.getElementById("passwordInput");
+    setTimeout(() => {
+      passwordInput.focus();
+    }, 100);
 
-    submitButton.addEventListener("click", () => {
-      resolve(); 
-    });
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        resolve();
+      } else if (event.key === "Escape") {
+        resolve();
+      }
+    };
+
+    const handleBlur = () => {
+      resolve();
+    };
+
+    passwordInput.addEventListener("keydown", handleKeyDown);
+    passwordInput.addEventListener("blur", handleBlur);
   });
 }
+
 
 
 async function encrypt (blockUuid){
