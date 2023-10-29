@@ -1,0 +1,48 @@
+.hidden {
+    display: none;
+    width: 0;
+}
+
+/* fancy animation */
+@keyframes scaleAnimation {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+/* hide encrypted block content while encrypted */
+.block-children:has([data-on-click="decrypt_private_block"]) .block-children-container {
+    background-color: magenta;
+    display: none;
+}
+
+.modal {
+    top: 20%;
+    background-color: #27282B;
+    padding: 20px;
+    border: 1px solid #3F3F3F;
+    border-radius: 5px;
+    width: 300px;
+    margin: 0 auto;
+    margin-top: 15%;
+    color: #CCCCCC;
+    animation: scaleAnimation 0.1s forwards;
+}
+
+.modal.modal-hidden {
+    animation: scaleAnimation 0.1s reverse forwards;
+    animation-fill-mode: forwards;
+}
+
+.input-box {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    color: inherit;
+    font-size: 16px;
+}
