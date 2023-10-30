@@ -23,7 +23,7 @@
     "parcel": "^2.5.0"
   },
   "logseq": {
-    "id": "logseq-privacy-mode",
+    "id": "logseq-privacy-mode-test",
     "title": "privacyMode",
     "icon": "./icon.png"
   }

@@ -32,7 +32,8 @@ const settings = [
         key: "hidden_style",
         title: "Preferred style for your hidden block",
         type: "string",
-        default: `background-color: black; color: black`
+        inputAs: 'textarea',
+        default: `background-color: black; \ncolor: black`
       },
     {
       key: "encrypt_options",
@@ -58,20 +59,31 @@ const settings = [
           key: "unlock_password",
           title: "Password for when decrypting text.",
           description: " ",
-          type: "string",
+          type: 'string',
           default: ""
         },
         {
           key: "secret_passphrase",
           title: "Passphrase used in encryption.",
           description: "If left empty. The text will be converted to base64 character. Else, it would use CryptoJS.AES to encrypt. Warning: Always decrypt all blocks before changing password.",
-          type: "string",
+          type: 'string',
           default: ""
         },
   
 ];
 
+const styleElement = parent.document.createElement("style");
 
+const cssRules = `
+  .panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="unlock_password"] input {
+    color: var(--ls-primary-background-color)!important
+  }
+`;
+
+styleElement.innerHTML = cssRules;
+
+// Append the <style> element to the <head> of the document
+parent.document.head.appendChild(styleElement);
 
 const main = () => {
 
@@ -90,7 +102,11 @@ const main = () => {
   logseq.provideModel({
     get_settings(e) {
       logseq.showSettingsUI()
-    }
+      setTimeout(function () {
+        parent.document.querySelector('.panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="secret_passphrase"] input').type = "password";
+        }, 1000);
+      
+      }
   });
 
   // == Encrypt Block == //
