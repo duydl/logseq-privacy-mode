@@ -72,24 +72,25 @@ const settings = [
   
 ];
 
-const styleElement = parent.document.createElement("style");
-
-const cssRules = `
-  .panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="unlock_password"] input {
-    color: var(--ls-primary-background-color)!important
-  }
-`;
-
-styleElement.innerHTML = cssRules;
-
-// Append the <style> element to the <head> of the document
-parent.document.head.appendChild(styleElement);
-
 const main = () => {
 
   logseq.useSettingsSchema(settings);
 
   console.log("=== logseq-privacy-mode Plugin Loaded ===")
+
+//   logseq.provideStyle(`.panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="secret_passphrase"] input {
+//     color: transparent!important
+//   }
+//   .panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="unlock_password"] input {
+//     color: transparent!important
+//   }
+//   .panel-wrap[data-id="logseq-privacy-mode"] .desc-item[data-key="secret_passphrase"] input {
+//     color: transparent!important
+//   }
+//   .panel-wrap[data-id="logseq-privacy-mode"] .desc-item[data-key="unlock_password"] input {
+//     color: transparent!important
+//   }`
+//  )
   
   logseq.App.registerUIItem("toolbar", {
       key: "privacy-mode-settings",
@@ -100,12 +101,21 @@ const main = () => {
   });
 
   logseq.provideModel({
-    get_settings(e) {
-      logseq.showSettingsUI()
-      setTimeout(function () {
-        parent.document.querySelector('.panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="secret_passphrase"] input').type = "password";
-        }, 1000);
+    async get_settings(e) {
+      document.getElementById("modal").classList.remove('modal-hidden');
+      logseq.showMainUI()
+
+      await waitForPassword(); 
+        
+      const enteredPassword = passwordInput.value;
+      passwordInput.value = "";
+
+      document.getElementById("modal").classList.add('modal-hidden');
       
+      logseq.hideMainUI()
+
+      if (enteredPassword != logseq.settings?.unlock_password) {return}
+      logseq.showSettingsUI()
       }
   });
 
@@ -140,7 +150,7 @@ const main = () => {
         document.getElementById("modal").classList.remove('modal-hidden');
         logseq.showMainUI()
 
-        await waitForSubmitClick(); 
+        await waitForPassword(); 
         
         const enteredPassword = passwordInput.value;
         passwordInput.value = "";
@@ -248,7 +258,7 @@ const main = () => {
       document.getElementById("modal").classList.remove('modal-hidden');
       logseq.showMainUI()
 
-      await waitForSubmitClick(); 
+      await waitForPassword(); 
       
       const enteredPassword = passwordInput.value;
       passwordInput.value = "";
@@ -406,7 +416,7 @@ logseq.ready(main).catch(console.error)
 
 
 
-async function waitForSubmitClick() {
+async function waitForPassword() {
   return new Promise((resolve) => {
     const passwordInput = document.getElementById("passwordInput");
     setTimeout(() => {
