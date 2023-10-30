@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.6...v1.2.7) (2023-10-30)
+
+
+### Bug Fixes
+
+* require password to open setting from toolbar ([3564cc6](https://github.com/duydl/logseq-privacy-mode/commit/3564cc61d791bdc0b2b19d9f3d99af7d2d96bef2))
+
 ## [1.2.6](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.5...v1.2.6) (2023-10-13)
 
 
