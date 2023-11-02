@@ -3,7 +3,7 @@ import "@logseq/libs";
 import CryptoJS from "crypto-js";
 
 const parser = new DOMParser();
-const delay = ms => new Promise(res => setTimeout(res, ms));
+// const delay = ms => new Promise(res => setTimeout(res, ms));
 
 const settings = [
 
@@ -78,20 +78,15 @@ const main = () => {
 
   console.log("=== logseq-privacy-mode Plugin Loaded ===")
 
-//   logseq.provideStyle(`.panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="secret_passphrase"] input {
-//     color: transparent!important
-//   }
-//   .panel-wrap[data-id="logseq-privacy-mode-test"] .desc-item[data-key="unlock_password"] input {
-//     color: transparent!important
-//   }
-//   .panel-wrap[data-id="logseq-privacy-mode"] .desc-item[data-key="secret_passphrase"] input {
-//     color: transparent!important
-//   }
-//   .panel-wrap[data-id="logseq-privacy-mode"] .desc-item[data-key="unlock_password"] input {
-//     color: transparent!important
-//   }`
-//  )
-  
+  // Hide settings option from menu. Force entering settings from toolbar with password.
+  logseq.provideStyle({
+    style: `
+    li:has(a[data-id="logseq-privacy-mode"]) {
+      display: none;
+    }
+    `,
+  })
+
   logseq.App.registerUIItem("toolbar", {
       key: "privacy-mode-settings",
       template:
