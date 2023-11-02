@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.7...v1.2.8) (2023-11-02)
+
+
+### Bug Fixes
+
+* remove settings from settings-plugin-list ([edba248](https://github.com/duydl/logseq-privacy-mode/commit/edba2482dc5369f2ba9a64240c133536d7dc0a6d))
+
 ## [1.2.7](https://github.com/duydl/logseq-privacy-mode/compare/v1.2.6...v1.2.7) (2023-10-30)
 
 
